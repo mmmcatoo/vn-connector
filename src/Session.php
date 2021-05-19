@@ -207,4 +207,32 @@ HTML;
 
         }
     }
+
+    /**
+     * 远程获取客户信息
+     * @param string $appId
+     * @param string $appSign
+     * @param string $remoteIP
+     * @return integer|array
+     */
+    public static function queryCustomer(string $appId, string $appSign, string $remoteIP)
+    {
+        $model = new RemoteModel('SsoCustomer', '');
+        $customer = $model->where('app_id', '=', $appId)->find();
+        if ($customer === null) {
+            // 客户不存在
+            return -2;
+        }
+        $sign = md5(sprintf('%s%s', $appId, $customer['app_secret']));
+        if ($sign !== $appSign) {
+            // 签名验证失败
+            return -1;
+        }
+        $ipWhiteList = json_decode($customer['ip_list'], true);
+        if (is_array($ipWhiteList) && !in_array($remoteIP, $ipWhiteList)) {
+            // 验证IP失败
+            return -3;
+        }
+        return $customer;
+    }
 }
