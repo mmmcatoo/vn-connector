@@ -230,7 +230,7 @@ class RemoteModel
     public function delete(): bool
     {
         try {
-            $res     = $this->client->request('POST', '/database/create', [
+            $res     = $this->client->request('POST', '/database/delete', [
                 'body'    => json_encode(array_merge(['tableName' => $this->tableName], $this->buildWhere())),
                 'headers' => [
                     'X-Authorization' => $this->token,
