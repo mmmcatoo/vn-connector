@@ -21,7 +21,7 @@ class Validation
      */
     public static function fromInternalAddress(string $ipAddress): bool
     {
-        $ipAddress = filter_var($ipAddress, FILTER_FLAG_IPV4);
+        $ipAddress = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
         if ($ipAddress === false) {
             // 不是有效的IP地址
             throw new \RuntimeException($ipAddress);
