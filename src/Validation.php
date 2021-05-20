@@ -17,6 +17,7 @@ class Validation
      * 计算IP地址是否内网IP
      * @param string $ipAddress
      * @return bool
+     * @throws \RuntimeException
      */
     public static function fromInternalAddress(string $ipAddress): bool
     {
