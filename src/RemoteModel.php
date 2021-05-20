@@ -211,7 +211,7 @@ class RemoteModel
     {
         try {
             $res     = $this->client->request('POST', '/database/create', [
-                'body'    => json_encode(array_merge(['tableName' => $this->tableName, 'insert' => $params], $this->buildWhere())),
+                'body'    => json_encode(array_merge(['table' => $this->tableName, 'insert' => $params], $this->buildWhere())),
                 'headers' => [
                     'X-Authorization' => $this->token,
                 ],
@@ -231,7 +231,7 @@ class RemoteModel
     {
         try {
             $res     = $this->client->request('POST', '/database/delete', [
-                'body'    => json_encode(array_merge(['tableName' => $this->tableName], $this->buildWhere())),
+                'body'    => json_encode(array_merge(['table' => $this->tableName], $this->buildWhere())),
                 'headers' => [
                     'X-Authorization' => $this->token,
                 ],
