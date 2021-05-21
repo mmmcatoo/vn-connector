@@ -98,7 +98,9 @@ class RemoteModel
             // You can set any number of default request options.
             'timeout'  => 2.0,
         ]);
-        $this->params = json_decode($params, true);
+        if ($params) {
+            $this->params = json_decode($params, true);
+        }
     }
 
     /**

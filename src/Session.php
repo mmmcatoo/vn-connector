@@ -217,7 +217,7 @@ HTML;
      */
     public static function queryCustomer(string $appId, string $appSign, string $remoteIP)
     {
-        $model = new RemoteModel('SsoCustomer', '');
+        $model = new RemoteModel('SsoCustomer', '', '');
         $customer = $model->where('app_id', '=', $appId)->find();
         if ($customer === null) {
             // 客户不存在
