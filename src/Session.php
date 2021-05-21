@@ -219,7 +219,7 @@ HTML;
     {
         $model = new RemoteModel('SsoCustomer', '', '');
         $customer = $model->where('app_id', '=', $appId)->find();
-        if ($customer === null) {
+        if (!count($customer)) {
             // 客户不存在
             return -2;
         }
