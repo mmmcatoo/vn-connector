@@ -42,6 +42,11 @@ class Validation
             // 172.16.0.0 - 172.31.255.255
             return true;
         }
+
+        if (2130706432 <= $longIP && $longIP <= 2130706687) {
+            // 127.0.0.0 - 127.0.0.255
+            return true;
+        }
         return false;
     }
 }
