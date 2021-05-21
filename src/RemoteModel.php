@@ -184,7 +184,7 @@ class RemoteModel
     public function find(): ?array
     {
         $raw = $this->limit(1)->select();
-        return count($raw['rows']) === 0 ? [] : $raw['rows'];
+        return count($raw['rows']) === 0 ? [] : $raw['rows'][0];
     }
 
     /**
