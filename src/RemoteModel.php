@@ -71,15 +71,24 @@ class RemoteModel
     private $client = null;
 
     /**
+     * 匹配到的规则
+     * @var array
+     */
+    private $params = null;
+
+    /**
      * RemoteModel constructor.
      * @param string $modelName
      * @param string $token
+     * @param string $params
      */
-    public function __construct(string $modelName, string $token)
+    public function __construct(string $modelName, string $token, string $params)
     {
         // 修正模型的名称
-        $this->tableName = ucfirst(preg_replace_callback($modelName, function (string $item) {
-            var_dump($item);
+        $this->tableName = ucfirst(preg_replace_callback('(_\w{1,1})', function (array $item) {
+            if (count($item)) {
+                return strtoupper(substr($item[0], 1));
+            }
             return '';
         }, $modelName));
         $this->token     = $token;
@@ -89,6 +98,7 @@ class RemoteModel
             // You can set any number of default request options.
             'timeout'  => 2.0,
         ]);
+        $this->params = json_decode($params, true);
     }
 
     /**
@@ -256,11 +266,17 @@ class RemoteModel
         $params = [];
         if (count($this->condition)) {
             $params['condition'] = $this->condition;
+            $this->mergeParams($params['condition']);
         } elseif ($this->template) {
             $params['raw'] = [
                 'template' => $this->template,
                 'binding'  => $this->binding,
             ];
+
+            $this->mergeParams($params['raw']['template'], $params['raw']['binding']);
+        } else {
+            $params['condition'] = [];
+            $this->mergeParams($params['condition']);
         }
 
         if (count($this->paginate) > 0) {
@@ -272,5 +288,24 @@ class RemoteModel
         }
 
         return $params;
+    }
+
+    private function mergeParams(&$template, array &$binding = [])
+    {
+       if ($this->params) {
+           if (count($binding) === 0) {
+               foreach ($this->params as $key => $v) {
+                   $template[$key] = $v;
+               }
+           } else {
+               foreach ($this->params as $key => $v) {
+                   $bindingValue = is_array($v['values']) ? sprintf('(%s)', implode(', ', array_fill(0, count($v['values']), '?'))) : '?';
+                   $template .= sprintf(' AND %s %s %s', $key, $v['operator'], $bindingValue);
+                   foreach ((array) $v['values'] as $item) {
+                       $binding[] = $item;
+                   }
+               }
+           }
+       }
     }
 }
