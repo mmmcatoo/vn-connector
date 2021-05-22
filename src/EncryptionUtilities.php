@@ -22,7 +22,7 @@ class EncryptionUtilities
     public static function encrypt(string $hash, string $key) {
         $iv = substr(sha1($key), 0, 12);
         $key = substr(hash('sha256', $key), 0, 24);
-        return base64_encode(openssl_encrypt(utf8_encode($hash), 'chacha20-poly1305', $key,OPENSSL_ZERO_PADDING, $iv));
+        return base64_encode(openssl_encrypt(utf8_encode($hash), 'camellia-256-cbc', $key,OPENSSL_ZERO_PADDING, $iv));
     }
 
     /**
@@ -34,6 +34,6 @@ class EncryptionUtilities
     public static function decrypt($hash, string $key) {
         $iv = substr(sha1($key), 0, 12);
         $key = substr(hash('sha256', $key), 0, 24);
-        return openssl_decrypt(base64_decode($hash), 'chacha20-poly1305', $key, OPENSSL_ZERO_PADDING, $iv);
+        return openssl_decrypt(base64_decode($hash), 'camellia-256-cbc', $key, OPENSSL_ZERO_PADDING, $iv);
     }
 }
