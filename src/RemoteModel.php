@@ -155,6 +155,11 @@ class RemoteModel
         return $this;
     }
 
+    /**
+     * 搜索数据
+     * @param string $columns
+     * @return array
+     */
     public function select(string $columns = '*'): array
     {
         $params = array_merge(['table' => $this->tableName, 'columns' => $columns], $this->buildWhere());
@@ -206,11 +211,12 @@ class RemoteModel
             $resJson = json_decode($res->getBody()->getContents(), true);
             if ($resJson['status']) {
                 return true;
-            } else {
-                return false;
             }
+            // 抛出异常
+            throw new \RuntimeException($resJson['msg'], $resJson['code']);
         } catch (GuzzleException $e) {
-            return false;
+            // 转换异常
+            throw new \RuntimeException($e->getMessage(), 9005);
         }
     }
 
@@ -231,14 +237,19 @@ class RemoteModel
             $resJson = json_decode($res->getBody()->getContents(), true);
             if ($resJson['status']) {
                 return true;
-            } else {
-                return false;
             }
+            // 抛出异常
+            throw new \RuntimeException($resJson['msg'], $resJson['code']);
         } catch (GuzzleException $e) {
-            return false;
+            // 转换异常
+            throw new \RuntimeException($e->getMessage(), 9006);
         }
     }
 
+    /**
+     * 删除指定的数据
+     * @return bool
+     */
     public function delete(): bool
     {
         try {
@@ -251,11 +262,12 @@ class RemoteModel
             $resJson = json_decode($res->getBody()->getContents(), true);
             if ($resJson['status']) {
                 return true;
-            } else {
-                return false;
             }
+            // 抛出异常
+            throw new \RuntimeException($resJson['msg'], $resJson['code']);
         } catch (GuzzleException $e) {
-            return false;
+            // 转换异常
+            throw new \RuntimeException($e->getMessage(), 9007);
         }
     }
 
@@ -292,6 +304,11 @@ class RemoteModel
         return $params;
     }
 
+    /**
+     * 合并相关的变量参数
+     * @param       $template
+     * @param array $binding
+     */
     private function mergeParams(&$template, array &$binding = [])
     {
        if ($this->params) {
