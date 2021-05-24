@@ -193,6 +193,16 @@ class RemoteModel
     }
 
     /**
+     * 设置排序顺序
+     * @param string $order
+     * @return $this
+     */
+    public function orderBy(string $order): RemoteModel {
+        $this->orderBy = $order;
+        return $this;
+    }
+
+    /**
      * 更新数据库
      * @param array $params
      * @return bool
