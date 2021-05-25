@@ -12,7 +12,6 @@
 namespace VnConnector;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 
 class RemoteModel
 {
@@ -203,10 +202,10 @@ class RemoteModel
             if ($resJson['status']) {
                 return $resJson['payload'];
             } else {
-                return ['rows' => [], 0];
+                return ['rows' => [], 'total' => 0];
             }
-        } catch (GuzzleException $e) {
-            return ['rows' => [], 0];
+        } catch (\Exception $e) {
+            return ['rows' => [], 'total' => 0];
         }
     }
 
@@ -253,7 +252,7 @@ class RemoteModel
             }
             // 抛出异常
             throw new \RuntimeException($resJson['msg'], $resJson['code']);
-        } catch (GuzzleException $e) {
+        } catch (\Exception $e) {
             // 转换异常
             throw new \RuntimeException($e->getMessage(), 9005);
         }
@@ -279,7 +278,7 @@ class RemoteModel
             }
             // 抛出异常
             throw new \RuntimeException($resJson['msg'], $resJson['code']);
-        } catch (GuzzleException $e) {
+        } catch (\Exception $e) {
             // 转换异常
             throw new \RuntimeException($e->getMessage(), 9006);
         }
@@ -304,7 +303,7 @@ class RemoteModel
             }
             // 抛出异常
             throw new \RuntimeException($resJson['msg'], $resJson['code']);
-        } catch (GuzzleException $e) {
+        } catch (\Exception $e) {
             // 转换异常
             throw new \RuntimeException($e->getMessage(), 9007);
         }
