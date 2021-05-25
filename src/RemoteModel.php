@@ -167,15 +167,17 @@ class RemoteModel
      * @param string $searchModel
      * @param array  $condition
      * @param string $fields
+     * @param bool   $binding
      * @return $this
      */
-    public function with(string $fieldName, string $searchModel, array $condition, string $fields = '*'): RemoteModel
+    public function with(string $fieldName, string $searchModel, array $condition, string $fields = '*', bool $binding = false): RemoteModel
     {
         $this->withLink[] = [
             'field'     => $fieldName,
             'model'     => $searchModel,
             'condition' => $condition,
             'fields'    => $fields,
+            'binding'   => $binding,
         ];
 
         return $this;
