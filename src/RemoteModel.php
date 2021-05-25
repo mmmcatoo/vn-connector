@@ -77,6 +77,12 @@ class RemoteModel
     private $params = null;
 
     /**
+     * 模型简单关联
+     * @var array
+     */
+    private $withLink;
+
+    /**
      * RemoteModel constructor.
      * @param string $modelName
      * @param string $token
@@ -156,13 +162,31 @@ class RemoteModel
     }
 
     /**
+     * 模型关联
+     * @param string $fieldName
+     * @param string $searchModel
+     * @param array  $condition
+     * @return $this
+     */
+    public function with(string $fieldName, string $searchModel, array $condition): RemoteModel
+    {
+        $this->withLink[] = [
+            'field' => $fieldName,
+            'model' => $searchModel,
+            'condition' => $condition
+        ];
+
+        return $this;
+    }
+
+    /**
      * 搜索数据
      * @param string $columns
      * @return array
      */
     public function select(string $columns = '*'): array
     {
-        $params = array_merge(['table' => $this->tableName, 'columns' => $columns], $this->buildWhere());
+        $params = array_merge(['table' => $this->tableName, 'columns' => $columns, 'link' => $this->withLink], $this->buildWhere());
 
         try {
             $res     = $this->client->request('POST', '/database/query', [
