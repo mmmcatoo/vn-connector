@@ -166,14 +166,16 @@ class RemoteModel
      * @param string $fieldName
      * @param string $searchModel
      * @param array  $condition
+     * @param string $fields
      * @return $this
      */
-    public function with(string $fieldName, string $searchModel, array $condition): RemoteModel
+    public function with(string $fieldName, string $searchModel, array $condition, string $fields = '*'): RemoteModel
     {
         $this->withLink[] = [
-            'field' => $fieldName,
-            'model' => $searchModel,
-            'condition' => $condition
+            'field'     => $fieldName,
+            'model'     => $searchModel,
+            'condition' => $condition,
+            'fields'    => $fields,
         ];
 
         return $this;
@@ -221,7 +223,8 @@ class RemoteModel
      * @param string $order
      * @return $this
      */
-    public function orderBy(string $order): RemoteModel {
+    public function orderBy(string $order): RemoteModel
+    {
         $this->orderBy = $order;
         return $this;
     }
@@ -233,7 +236,7 @@ class RemoteModel
      */
     public function update(array $params): bool
     {
-        $params = array_merge(['table'  => $this->tableName, 'update' => $params], $this->buildWhere());
+        $params = array_merge(['table' => $this->tableName, 'update' => $params], $this->buildWhere());
 
         try {
             $res     = $this->client->request('POST', '/database/update', [
@@ -345,20 +348,20 @@ class RemoteModel
      */
     private function mergeParams(&$template, array &$binding = [])
     {
-       if ($this->params) {
-           if (count($binding) === 0) {
-               foreach ($this->params as $key => $v) {
-                   $template[$key] = $v;
-               }
-           } else {
-               foreach ($this->params as $key => $v) {
-                   $bindingValue = is_array($v['values']) ? sprintf('(%s)', implode(', ', array_fill(0, count($v['values']), '?'))) : '?';
-                   $template .= sprintf(' AND %s %s %s', $key, $v['operator'], $bindingValue);
-                   foreach ((array) $v['values'] as $item) {
-                       $binding[] = $item;
-                   }
-               }
-           }
-       }
+        if ($this->params) {
+            if (count($binding) === 0) {
+                foreach ($this->params as $key => $v) {
+                    $template[$key] = $v;
+                }
+            } else {
+                foreach ($this->params as $key => $v) {
+                    $bindingValue = is_array($v['values']) ? sprintf('(%s)', implode(', ', array_fill(0, count($v['values']), '?'))) : '?';
+                    $template     .= sprintf(' AND %s %s %s', $key, $v['operator'], $bindingValue);
+                    foreach ((array)$v['values'] as $item) {
+                        $binding[] = $item;
+                    }
+                }
+            }
+        }
     }
 }
