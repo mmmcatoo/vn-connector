@@ -261,20 +261,22 @@ class RemoteModel
     /**
      * 创建新的数据
      * @param array $params
-     * @return bool
+     * @param bool  $returnModel
+     * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function create(array $params): bool
+    public function create(array $params, bool $returnModel = false)
     {
         try {
             $res     = $this->client->request('POST', '/database/create', [
-                'body'    => json_encode(array_merge(['table' => $this->tableName, 'insert' => $params], $this->buildWhere())),
+                'body'    => json_encode(array_merge(['table' => $this->tableName, 'insert' => $params, 'returnModel' => $returnModel], $this->buildWhere())),
                 'headers' => [
                     'X-Authorization' => $this->token,
                 ],
             ]);
             $resJson = json_decode($res->getBody()->getContents(), true);
             if ($resJson['status']) {
-                return true;
+                return $returnModel ? $resJson['payload'] : true;
             }
             // 抛出异常
             throw new \RuntimeException($resJson['msg'], $resJson['code']);
