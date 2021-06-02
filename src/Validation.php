@@ -16,11 +16,15 @@ class Validation
     /**
      * 计算IP地址是否内网IP
      * @param string $ipAddress
+     * @param array  $deployIpAddress
      * @return bool
-     * @throws \RuntimeException
      */
-    public static function fromInternalAddress(string $ipAddress): bool
+    public static function fromInternalAddress(string $ipAddress, array $deployIpAddress = []): bool
     {
+        if (count($deployIpAddress) > 0 && in_array($ipAddress, $deployIpAddress)) {
+            return true;
+        }
+
         $ipAddress = filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
         if ($ipAddress === false) {
             // 不是有效的IP地址
