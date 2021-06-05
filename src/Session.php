@@ -128,7 +128,7 @@ class Session
 <title>SSO Login Redirecting...</title>
 </head>
 <body>
-<form id="frm" method="post" action="{$endpoint}" enctype="application/x-www-form-urlencoded">
+<form id="frm" method="post" action="{$endpoint}/session/login" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="callback" value="{$callback}/session/login"/>
     <input type="hidden" name="role" value="{$role}"/>
     <input type="hidden" name="target" value="{$target}"/>
