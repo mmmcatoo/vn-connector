@@ -97,9 +97,9 @@ class Session
     {
         if (count(self::$userInfo) > 0) {
             return [
-                'user' => self::$userInfo,
-                'rules' => self::$rules,
-                'departments' => self::$departments
+                'user'        => self::$userInfo,
+                'rules'       => self::$rules,
+                'departments' => self::$departments,
             ];
         }
         throw new \RuntimeException('用户尚未登录', self::ErrUserNotLogin);
@@ -110,9 +110,10 @@ class Session
      * @param string $host
      * @param string $callbackUrl 回调地址
      * @param string $role        请求角色
+     * @param string $target      客户端类型
      * @return string 拼接好的HTML
      */
-    public static function redirect(string $host, string $callbackUrl, string $role): string
+    public static function redirect(string $host, string $callbackUrl, string $role, string $target): string
     {
         $callback = sprintf('https://%s%s', $host, $callbackUrl);
         $endpoint = self::$endpoint;
@@ -130,6 +131,7 @@ class Session
 <form id="frm" method="post" action="{$endpoint}" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="callback" value="{$callback}/session/login"/>
     <input type="hidden" name="role" value="{$role}"/>
+    <input type="hidden" name="target" value="{$target}"/>
 </form>
 <script type="text/javascript">
     document.querySelector('#frm').submit()
@@ -152,10 +154,10 @@ HTML;
                 return false;
             }
             // 处理数据
-            self::$token = $binary->token;
-            self::$expired = $binary->expired + time();
-            self::$userInfo = $binary->userInfo;
-            self::$rules = $binary->rules;
+            self::$token       = $binary->token;
+            self::$expired     = $binary->expired + time();
+            self::$userInfo    = $binary->userInfo;
+            self::$rules       = $binary->rules;
             self::$departments = $binary->departments;
             return true;
         } catch (\Throwable $e) {
@@ -177,7 +179,7 @@ HTML;
         ]);
         try {
             $client->request('POST', '/session/token', [
-                'body' => json_encode(['token' => $token])
+                'body' => json_encode(['token' => $token]),
             ]);
         } catch (GuzzleException $e) {
 
@@ -199,8 +201,8 @@ HTML;
         try {
             $res = $client->request('GET', '/session/current', [
                 'headers' => [
-                    'X-Authorization' => $token
-                ]
+                    'X-Authorization' => $token,
+                ],
             ]);
             self::decrypt($res->getBody()->getContents());
         } catch (GuzzleException $e) {
@@ -217,7 +219,7 @@ HTML;
      */
     public static function queryCustomer(string $appId, string $appSign, string $remoteIP)
     {
-        $model = new RemoteModel('SsoCustomer', '', '');
+        $model    = new RemoteModel('SsoCustomer', '', '');
         $customer = $model->where('app_id', '=', $appId)->find();
         if (!count($customer)) {
             // 客户不存在
