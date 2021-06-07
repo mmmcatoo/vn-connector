@@ -231,6 +231,9 @@ HTML;
             return -1;
         }
         $ipWhiteList = json_decode($customer['ip_list'], true);
+        if (count($ipWhiteList) === 0 || in_array('0.0.0.0', $ipWhiteList)) {
+            return $customer;
+        }
         if (is_array($ipWhiteList) && !in_array($remoteIP, $ipWhiteList)) {
             // 验证IP失败
             return -3;
