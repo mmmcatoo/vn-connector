@@ -161,7 +161,7 @@ class DatabaseSync
     public static function __callStatic($name, $arguments)
     {
         if (substr($name, 0, 2) === 'on') {
-            $method = strtolower(str_replace($name, 'Event', ''));
+            $method = strtolower(str_replace('Event', '', substr($name, 2)));
             if (in_array($method, [self::DataCreate, self::DataUpdate, self::DataDelete])) {
                 // 设置事件回调
                 if (isset($arguments[0]) && $arguments[0] instanceof \Closure) {
