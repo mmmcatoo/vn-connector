@@ -196,6 +196,8 @@ class RemoteModel
                 'body'    => json_encode($params),
                 'headers' => [
                     'X-Authorization' => $this->token,
+                    'Accept'          => 'application/json',
+                    'Content-Type'    => 'application/json',
                 ],
             ]);
             $resJson = json_decode($res->getBody()->getContents(), true);
