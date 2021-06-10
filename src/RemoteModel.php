@@ -246,6 +246,8 @@ class RemoteModel
                 'body'    => json_encode($params),
                 'headers' => [
                     'X-Authorization' => $this->token,
+                    'Accept'          => 'application/json',
+                    'Content-Type'    => 'application/json',
                 ],
             ]);
             $resJson = json_decode($res->getBody()->getContents(), true);
@@ -274,6 +276,8 @@ class RemoteModel
                 'body'    => json_encode(array_merge(['table' => $this->tableName, 'insert' => $params, 'returnModel' => $returnModel], $this->buildWhere())),
                 'headers' => [
                     'X-Authorization' => $this->token,
+                    'Accept'          => 'application/json',
+                    'Content-Type'    => 'application/json',
                 ],
             ]);
             $resJson = json_decode($res->getBody()->getContents(), true);
@@ -299,6 +303,8 @@ class RemoteModel
                 'body'    => json_encode(array_merge(['table' => $this->tableName], $this->buildWhere())),
                 'headers' => [
                     'X-Authorization' => $this->token,
+                    'Accept'          => 'application/json',
+                    'Content-Type'    => 'application/json',
                 ],
             ]);
             $resJson = json_decode($res->getBody()->getContents(), true);

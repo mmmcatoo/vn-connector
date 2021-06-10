@@ -53,6 +53,10 @@ class TrackerProxy
 
         $res = $client->request('POST', sprintf('/tracker/%s/upgrade', $shipmentNumber), [
             'body'    => json_encode($trackerArray),
+            'headers' => [
+                'Accept'          => 'application/json',
+                'Content-Type'    => 'application/json',
+            ],
         ]);
         $resJson = json_decode($res->getBody()->getContents(), true);
         if (!$resJson['status']) {
@@ -77,6 +81,10 @@ class TrackerProxy
                 'shipmentNumber' => $shipmentNumbers,
                 'trace' => $trackerArray
             ]),
+            'headers' => [
+                'Accept'          => 'application/json',
+                'Content-Type'    => 'application/json',
+            ],
         ]);
         $resJson = json_decode($res->getBody()->getContents(), true);
         if (!$resJson['status']) {
