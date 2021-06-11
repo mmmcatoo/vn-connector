@@ -115,6 +115,7 @@ class TrackerBeans
             $reflect = new \ReflectionClass($this);
             $properties = $reflect->getProperties();
             foreach ($properties as $property) {
+                $property->setAccessible(true);
                 $result[$property->getName()] = $property->getValue($this);
             }
             return $result;
