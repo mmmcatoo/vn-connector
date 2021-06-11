@@ -102,15 +102,16 @@ class DatabaseSync
      * @param string $type   事件类型
      * @param string $model  关联的模型名称
      * @param array  $params 变动的数据
+     * @param string $endpoint
      * @return bool
-     * @throws \RuntimeException|\GuzzleHttp\Exception\GuzzleException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function publish(string $type, string $model, array $params): bool
+    public function publish(string $type, string $model, array $params, string $endpoint = ''): bool
     {
         try {
             $client = new Client([
                 // Base URI is used with relative requests
-                'base_uri' => $this->endpoint,
+                'base_uri' => $endpoint ?: $this->endpoint,
                 // You can set any number of default request options.
                 'timeout'  => 2.0,
             ]);
