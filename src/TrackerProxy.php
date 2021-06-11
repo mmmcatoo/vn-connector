@@ -60,7 +60,7 @@ class TrackerProxy
         ]);
         $resJson = json_decode($res->getBody()->getContents(), true);
         if (!$resJson['status']) {
-            throw new \RuntimeException($resJson['message']);
+            throw new \RuntimeException($resJson['msg']);
         }
         return true;
     }
@@ -88,7 +88,7 @@ class TrackerProxy
         ]);
         $resJson = json_decode($res->getBody()->getContents(), true);
         if (!$resJson['status']) {
-            throw new \RuntimeException($resJson['message']);
+            throw new \RuntimeException($resJson['msg']);
         }
         return true;
     }
