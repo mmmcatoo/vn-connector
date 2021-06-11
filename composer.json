@@ -16,7 +16,8 @@
     },
     "autoload": {
         "psr-4": {
-            "VnConnector\\": "src/"
+            "VnConnector\\": "src/",
+            "VnConnector\\Beans\\": "src/beans/"
         }
     }
 }
